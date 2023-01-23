@@ -140,6 +140,3 @@ func on_enemy_killed():
 	enemies_in_wave -= 1
 	if enemies_in_wave == 0:
 		get_node("UI").end_wave()
-	
-
-	

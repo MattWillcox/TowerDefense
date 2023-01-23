@@ -168,7 +168,7 @@ margin_right = 164.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 110, 60 )
 custom_fonts/font = ExtResource( 11 )
-text = "0"
+text = "100"
 align = 2
 valign = 1
 
