@@ -13,7 +13,7 @@ var build_type
 var current_wave = 0
 var enemies_in_wave = 0
 
-var base_health = 100
+var base_health = 20
 
 var current_money = 100
 
@@ -24,6 +24,7 @@ func _ready():
 	get_node("Music").play()
 	get_node("UI/HUD/BuildBar/Gun/Cost").text = "$" + str(GameData.tower_data.GunT1.cost)
 	get_node("UI/HUD/BuildBar/Missile/Cost").text = "$" + str(GameData.tower_data.MissileT1.cost)
+	get_node("UI").connect("times_up", self, "on_times_up")
 	
 func _process(delta):
 	if build_mode:
@@ -42,7 +43,7 @@ func _unhandled_input(event):
 func start_next_wave():
 	var wave_data = retrieve_wave_data()
 	var preview_sprite = get_node("UI/HUD/InfoBar/H/NextWaveTexture")
-	preview_sprite.texture = load(EnemyData.enemy_data[current_wave - 1].sprite)
+	preview_sprite.texture = load(EnemyData.enemy_data[current_wave].sprite)
 	yield(get_tree().create_timer(0.2), "timeout") ## padding between waves so they do not start insta
 	spawn_enemies(wave_data)
 
@@ -51,13 +52,14 @@ func retrieve_wave_data():
 	var wave_data = []
 	var wave_enemies = enemy_data.total_enemies
 	for i in (enemy_data.total_enemies - 1):
-		wave_data.append([enemy_data.name, enemy_data.spawn_rate, enemy_data.money_reward, enemy_data.hp])
+		wave_data.append([enemy_data.name, enemy_data.spawn_rate, enemy_data.money_reward, enemy_data.hp, enemy_data.sprite])
 	enemies_in_wave = wave_data.size()
 	return wave_data
 
 func spawn_enemies(wave_data):
 	for i in wave_data:
 		var new_enemy = load("res://Scenes/Enemies/" + i[0] + ".tscn").instance()
+		new_enemy.get_node("Sprite").texture = load(i[4])
 		new_enemy.connect("base_damage", self, "on_base_damage")
 		new_enemy.connect("increase_money", self, "on_increase_money", [i[2]])
 		new_enemy.connect("enemy_killed", self, "on_enemy_killed")
@@ -113,9 +115,19 @@ func verify_and_build():
 ##
 ## Handlers
 ##
+func on_times_up():
+	if enemies_in_wave > 0:
+		on_base_damage(enemies_in_wave)
+	for i in map_node.get_node("Path").get_children():
+		i.queue_free()
+	
 func on_base_damage(damage):
 	base_health -= damage
 	if base_health <= 0:
+		get_node("UI").update_health_bar(0)
+		get_node("UI/HUD/GameOver").visible = true
+		
+		yield(get_tree().create_timer(2), "timeout")
 		emit_signal("game_finished", false)
 	else:
 		get_node("UI").update_health_bar(base_health)

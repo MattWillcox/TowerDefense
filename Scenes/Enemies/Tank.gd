@@ -56,8 +56,8 @@ func on_destroy():
 	self.queue_free()
 
 
+## TODO MW - fix this? somehow
 func _on_Area2D_body_entered(body):
 	if body.is_in_group("Projectiles"):
-		impact("missile")
 		on_hit(body.damage, "missile")
 		body.queue_free()

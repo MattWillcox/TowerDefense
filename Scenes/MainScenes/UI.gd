@@ -1,9 +1,16 @@
 extends CanvasLayer
 
+signal times_up()
+
 onready var hp_bar = get_node("HUD/InfoBar/H/HP")
 onready var hp_bar_tween = get_node("HUD/InfoBar/H/HP/Tween")
 onready var money = get_node("HUD/InfoBar/H/Money")
 onready var start_wave = get_node("HUD/StartWave")
+onready var round_timer = get_node("HUD/InfoBar/H/TimeRemaining/Timer")
+onready var round_timer_label = get_node("HUD/InfoBar/H/TimeRemaining")
+
+var round_time = 30
+var wave_started = false
 
 func set_tower_preview(tower_type, mouse_position):
 	var drag_tower = load("res://Scenes/Turrets/" + tower_type + ".tscn").instance()
@@ -72,9 +79,25 @@ func _on_Replay_pressed():
 
 
 func _on_StartWave_pressed():
+	wave_started = true
 	start_wave.visible = not visible
 	get_parent().current_wave += 1
 	get_parent().start_next_wave()
+	round_timer.start()
 
 func end_wave():
+	wave_started = false
 	start_wave.visible = visible
+	round_time = 30
+	round_timer_label.text = str(round_time)
+	
+
+func _on_Timer_timeout():
+	if !wave_started:
+		return
+	if round_time >= 1:
+		round_time -= 1
+		round_timer_label.text = str(round_time)
+		if round_time == 0:
+			end_wave()
+			emit_signal("times_up")

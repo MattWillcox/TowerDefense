@@ -153,29 +153,35 @@ anchor_bottom = 1.0
 
 [node name="Symbol" type="Label" parent="UI/HUD/InfoBar/H"]
 margin_top = 2.0
-margin_right = 120.0
+margin_right = 50.0
 margin_bottom = 62.0
-rect_min_size = Vector2( 120, 60 )
+rect_min_size = Vector2( 50, 60 )
 custom_fonts/font = ExtResource( 12 )
 text = "$"
 align = 2
 valign = 1
 
 [node name="Money" type="Label" parent="UI/HUD/InfoBar/H"]
-margin_left = 124.0
+margin_left = 54.0
 margin_top = 2.0
-margin_right = 234.0
+margin_right = 164.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 110, 60 )
 custom_fonts/font = ExtResource( 11 )
-text = "100"
+text = "0"
 align = 2
 valign = 1
 
+[node name="Control3" type="Control" parent="UI/HUD/InfoBar/H"]
+margin_left = 168.0
+margin_right = 228.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 60, 0 )
+
 [node name="NextWave" type="Label" parent="UI/HUD/InfoBar/H"]
-margin_left = 292.0
+margin_left = 232.0
 margin_top = 2.0
-margin_right = 486.0
+margin_right = 426.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 60, 60 )
 size_flags_horizontal = 10
@@ -185,19 +191,50 @@ align = 1
 valign = 1
 
 [node name="NextWaveTexture" type="TextureRect" parent="UI/HUD/InfoBar/H"]
-margin_left = 490.0
+margin_left = 430.0
 margin_top = 2.0
-margin_right = 550.0
+margin_right = 490.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 60, 60 )
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 size_flags_vertical = 4
 expand = true
 
-[node name="Life" type="Label" parent="UI/HUD/InfoBar/H"]
-margin_left = 726.0
+[node name="Control2" type="Control" parent="UI/HUD/InfoBar/H"]
+margin_left = 494.0
+margin_right = 554.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 60, 0 )
+
+[node name="TimeLabel" type="Label" parent="UI/HUD/InfoBar/H"]
+margin_left = 558.0
 margin_top = 2.0
-margin_right = 802.0
+margin_right = 644.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 60, 60 )
+size_flags_horizontal = 4
+custom_fonts/font = ExtResource( 11 )
+text = "Time:"
+valign = 1
+
+[node name="TimeRemaining" type="Label" parent="UI/HUD/InfoBar/H"]
+margin_left = 648.0
+margin_top = 2.0
+margin_right = 708.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 60, 60 )
+size_flags_horizontal = 0
+custom_fonts/font = ExtResource( 11 )
+text = "30"
+align = 1
+valign = 1
+
+[node name="Timer" type="Timer" parent="UI/HUD/InfoBar/H/TimeRemaining"]
+
+[node name="Life" type="Label" parent="UI/HUD/InfoBar/H"]
+margin_left = 786.0
+margin_top = 2.0
+margin_right = 862.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 60, 60 )
 size_flags_horizontal = 10
@@ -207,9 +244,9 @@ align = 1
 valign = 1
 
 [node name="HP" type="TextureProgress" parent="UI/HUD/InfoBar/H"]
-margin_left = 806.0
+margin_left = 866.0
 margin_top = 17.0
-margin_right = 1206.0
+margin_right = 1266.0
 margin_bottom = 47.0
 rect_min_size = Vector2( 400, 30 )
 size_flags_vertical = 4
@@ -223,10 +260,10 @@ nine_patch_stretch = true
 [node name="Tween" type="Tween" parent="UI/HUD/InfoBar/H/HP"]
 
 [node name="Control" type="Control" parent="UI/HUD/InfoBar/H"]
-margin_left = 1210.0
+margin_left = 1270.0
 margin_right = 1280.0
 margin_bottom = 64.0
-rect_min_size = Vector2( 70, 0 )
+rect_min_size = Vector2( 10, 0 )
 
 [node name="StartWave" type="Button" parent="UI/HUD"]
 anchor_left = 0.5
@@ -240,6 +277,20 @@ margin_bottom = 20.5
 custom_fonts/font = ExtResource( 11 )
 text = "Start Wave"
 
+[node name="GameOver" type="Label" parent="UI/HUD"]
+visible = false
+modulate = Color( 1, 0, 0, 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -28.5
+margin_right = 150.0
+margin_bottom = 28.5
+custom_fonts/font = ExtResource( 12 )
+text = "GAME OVER"
+
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 15 )
 volume_db = -38.454
@@ -247,4 +298,5 @@ volume_db = -38.454
 [connection signal="pressed" from="UI/HUD/GameControls/Replay" to="UI" method="_on_Replay_pressed"]
 [connection signal="pressed" from="UI/HUD/GameControls/PausePlay" to="UI" method="_on_PausePlay_pressed"]
 [connection signal="pressed" from="UI/HUD/GameControls/SpeedUp" to="UI" method="_on_SpeedUp_pressed"]
+[connection signal="timeout" from="UI/HUD/InfoBar/H/TimeRemaining/Timer" to="UI" method="_on_Timer_timeout"]
 [connection signal="pressed" from="UI/HUD/StartWave" to="UI" method="_on_StartWave_pressed"]
