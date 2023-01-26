@@ -35,9 +35,9 @@ alignment = 1
 
 [node name="NewGame" type="TextureButton" parent="M/VB"]
 margin_left = 75.0
-margin_top = 77.0
+margin_top = 187.0
 margin_right = 425.0
-margin_bottom = 152.0
+margin_bottom = 262.0
 rect_min_size = Vector2( 350, 75 )
 size_flags_horizontal = 4
 texture_normal = ExtResource( 1 )
@@ -57,6 +57,7 @@ __meta__ = {
 }
 
 [node name="Settings" type="TextureButton" parent="M/VB"]
+visible = false
 margin_left = 75.0
 margin_top = 187.0
 margin_right = 425.0
@@ -81,10 +82,11 @@ __meta__ = {
 }
 
 [node name="About" type="TextureButton" parent="M/VB"]
+visible = false
 margin_left = 75.0
-margin_top = 297.0
+margin_top = 242.0
 margin_right = 425.0
-margin_bottom = 372.0
+margin_bottom = 317.0
 rect_min_size = Vector2( 350, 75 )
 size_flags_horizontal = 4
 disabled = true
@@ -105,16 +107,16 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="M/VB"]
-margin_top = 407.0
+margin_top = 297.0
 margin_right = 500.0
-margin_bottom = 432.0
+margin_bottom = 322.0
 rect_min_size = Vector2( 0, 25 )
 
 [node name="Quit" type="TextureButton" parent="M/VB"]
 margin_left = 75.0
-margin_top = 467.0
+margin_top = 357.0
 margin_right = 425.0
-margin_bottom = 542.0
+margin_bottom = 432.0
 rect_min_size = Vector2( 350, 75 )
 size_flags_horizontal = 4
 texture_normal = ExtResource( 1 )

@@ -43,7 +43,10 @@ func _unhandled_input(event):
 func start_next_wave():
 	var wave_data = retrieve_wave_data()
 	var preview_sprite = get_node("UI/HUD/InfoBar/H/NextWaveTexture")
-	preview_sprite.texture = load(EnemyData.enemy_data[current_wave].sprite)
+	if current_wave < EnemyData.enemy_data.size():
+		preview_sprite.texture = load(EnemyData.enemy_data[current_wave].sprite)
+	else:
+		preview_sprite.texture = load("res://icon.png")
 	yield(get_tree().create_timer(0.2), "timeout") ## padding between waves so they do not start insta
 	spawn_enemies(wave_data)
 
@@ -117,6 +120,7 @@ func verify_and_build():
 ##
 func on_times_up():
 	if enemies_in_wave > 0:
+		print("enemies_in_wave", enemies_in_wave)
 		on_base_damage(enemies_in_wave)
 	for i in map_node.get_node("Path").get_children():
 		i.queue_free()
@@ -125,9 +129,10 @@ func on_base_damage(damage):
 	base_health -= damage
 	if base_health <= 0:
 		get_node("UI").update_health_bar(0)
+		get_node("UI").game_over = true
 		get_node("UI/HUD/GameOver").visible = true
 		
-		yield(get_tree().create_timer(2), "timeout")
+		yield(get_tree().create_timer(10), "timeout")
 		emit_signal("game_finished", false)
 	else:
 		get_node("UI").update_health_bar(base_health)

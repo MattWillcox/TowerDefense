@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 signal times_up()
+signal game_finished(result)
 
 onready var hp_bar = get_node("HUD/InfoBar/H/HP")
 onready var hp_bar_tween = get_node("HUD/InfoBar/H/HP/Tween")
@@ -11,6 +12,7 @@ onready var round_timer_label = get_node("HUD/InfoBar/H/TimeRemaining")
 
 var round_time = 30
 var wave_started = false
+var game_over = false
 
 func set_tower_preview(tower_type, mouse_position):
 	var drag_tower = load("res://Scenes/Turrets/" + tower_type + ".tscn").instance()
@@ -62,9 +64,9 @@ func _on_SpeedUp_pressed():
 func update_health_bar(base_health):
 	hp_bar_tween.interpolate_property(hp_bar, 'value', hp_bar.value, base_health, 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	hp_bar_tween.start()
-	if base_health >= 60:
+	if base_health >= 12:
 		hp_bar.set_tint_progress("0efd28")
-	elif base_health <= 60 and base_health >= 25:
+	elif base_health <= 12 and base_health >= 5:
 		hp_bar.set_tint_progress("e1be32")
 	else:
 		hp_bar.set_tint_progress("e11e1e")
@@ -72,11 +74,17 @@ func update_health_bar(base_health):
 func update_money(current_money):
 	money.text = str(current_money)
 	
-
-func _on_Replay_pressed():
-	get_parent().current_wave == 0
-	get_parent().start_next_wave()
-
+func end_wave():
+	wave_started = false
+	if EnemyData.enemy_data.size() == get_parent().current_wave:
+		start_wave.visible = false
+		get_node("HUD/Result/Victory").visible = true
+		yield(get_tree().create_timer(10), "timeout")
+		emit_signal("game_finished", false)
+	if !game_over:
+		start_wave.visible = visible
+		round_time = 30
+		round_timer_label.text = str(round_time)
 
 func _on_StartWave_pressed():
 	wave_started = true
@@ -85,13 +93,6 @@ func _on_StartWave_pressed():
 	get_parent().start_next_wave()
 	round_timer.start()
 
-func end_wave():
-	wave_started = false
-	start_wave.visible = visible
-	round_time = 30
-	round_timer_label.text = str(round_time)
-	
-
 func _on_Timer_timeout():
 	if !wave_started:
 		return
@@ -99,5 +100,5 @@ func _on_Timer_timeout():
 		round_time -= 1
 		round_timer_label.text = str(round_time)
 		if round_time == 0:
-			end_wave()
 			emit_signal("times_up")
+			end_wave()
